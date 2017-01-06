@@ -1,0 +1,92 @@
+apply plugin: 'com.android.library'
+apply plugin: 'com.jfrog.artifactory'
+apply plugin: 'maven-publish'
+
+def packageName = 'com.example.podlibrary'
+def libraryVersion = '1.1.7'
+
+android {
+    compileSdkVersion 24
+    buildToolsVersion "25.0.1"
+
+    defaultConfig {
+        minSdkVersion 9
+        targetSdkVersion 24
+        versionCode 1
+        versionName libraryVersion
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile 'com.android.support:appcompat-v7:24.2.1'
+    testCompile 'junit:junit:4.12'
+    compile('com.lalamove.podlibrary:drawingview:1.0.5')
+    compile ('com.android.support:design:23.1.0')
+    compile 'com.android.support.test.espresso:espresso-core:2.2.2'
+    compile 'com.android.volley:volley:1.0.0'
+}
+
+publishing {
+    publications {
+        aar(MavenPublication) {
+            groupId packageName
+            version = libraryVersion
+            artifactId project.getName()
+
+            // Tell maven to prepare the generated "*.aar" file for publishing
+            artifact("$buildDir/outputs/aar/${project.getName()}-release.aar")
+
+            pom.withXml {
+                def dependencies = asNode().appendNode('dependencies')
+                configurations.getByName("_releaseCompile").getResolvedConfiguration().getFirstLevelModuleDependencies().each {
+                    def dependency = dependencies.appendNode('dependency')
+                    dependency.appendNode('groupId', it.moduleGroup)
+                    dependency.appendNode('artifactId', it.moduleName)
+                    dependency.appendNode('version', it.moduleVersion)
+                }
+            }
+        }
+    }
+}
+
+
+artifactory {
+    contextUrl = "https://artifactory.easygroup.co/artifactory"   //The base Artifactory URL if not overridden by the publisher/resolver
+    publish {
+        repository {
+            repoKey = 'libs-release-local'
+            username = "daniel.kho"
+            password = "Xh+6vn?uJ_jEYUsz"
+            maven = true
+        }
+        defaults {
+            publications('aar')
+            publishArtifacts = true
+            publishPom = true
+            publishIvy = false
+
+            properties = ['qa.level': 'basic', 'dev.team': 'core']
+        }
+    }
+    resolve {
+        repository {
+            repoKey = 'libs-release'
+            username = "daniel.kho"
+            password = "Xh+6vn?uJ_jEYUsz"
+            maven = true
+        }
+    }
+}

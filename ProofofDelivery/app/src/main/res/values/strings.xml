@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">My Application</string>
+    <string name="btnSignaturePage">Press to go to a Signature Page</string>
+</resources>

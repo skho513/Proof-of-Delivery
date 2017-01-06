@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Signature Page</string>
+    <string name="welcome">Sign here.</string>
+    <string name="menu_settings">Settings</string>
+    <string name="button">Button</string>
+    <string name="btnCancel">Cancel</string>
+    <string name="btnClear">Clear</string>
+    <string name="btnSaveSignature">Save Signature</string>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000</color>
+</resources>
