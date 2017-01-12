@@ -5,7 +5,7 @@
     <string name="button">Button</string>
     <string name="btnCancel">Cancel</string>
     <string name="btnClear">Clear</string>
-    <string name="btnSaveSignature">Save Signature</string>
+    <string name="btnConfirm">Confirm</string>
     <color name="white">#FFFFFF</color>
     <color name="black">#000</color>
 </resources>

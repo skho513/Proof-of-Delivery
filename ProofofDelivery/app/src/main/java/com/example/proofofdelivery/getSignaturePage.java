@@ -26,13 +26,6 @@ public class getSignaturePage extends AppCompatActivity implements MyButton.Butt
               SerializeMethod();
             }
         });
-
-        // Where is the configuration injected?
-        // How do I clear the screen via a button click (and optionally allow me to override?)
-        // How do I listen to cancel button click and hide the activity?
-        // How do I know the onSave is being pressed and show the loading icon
-        // How do i know the save signature is successful so that I can hide the loading icon and (maybe close the activity)
-        // How do i know the save signature failed so i can hide the loading icon and show error message?
     }
 
     public void SerializeMethod(){
@@ -60,4 +53,12 @@ public class getSignaturePage extends AppCompatActivity implements MyButton.Butt
     public void onClear(View view) {
 
     }
+
+
 }
+// Where is the configuration injected?
+// How do I clear the screen via a button click (and optionally allow me to override?)
+// How do I listen to cancel button click and hide the activity?
+// How do I know the onSave is being pressed and show the loading icon
+// How do i know the save signature is successful so that I can hide the loading icon and (maybe close the activity)
+// How do i know the save signature failed so i can hide the loading icon and show error message?

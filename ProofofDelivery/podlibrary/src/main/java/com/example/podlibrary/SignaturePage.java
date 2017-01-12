@@ -24,7 +24,24 @@ import com.lalamove.drawingview.DrawingView;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.concurrent.TimeUnit;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.http.Multipart;
+import retrofit2.http.POST;
+import retrofit2.http.Part;
+
 
 public class SignaturePage extends AppCompatActivity implements MyButton.ButtonListener{
     public static final String TAG = SignaturePage.class.getSimpleName();
@@ -34,6 +51,7 @@ public class SignaturePage extends AppCompatActivity implements MyButton.ButtonL
     private Button btnRequestSignature;
     static boolean active = false;
     String myLog = "myLog";
+   // String path;
 
     AlphaAnimation inAnimation;
     AlphaAnimation outAnimation;
@@ -43,6 +61,9 @@ public class SignaturePage extends AppCompatActivity implements MyButton.ButtonL
     private Button clearBtn;
     private Button saveBtn;
     private TextView mTextView;
+    File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+    File file = new File(path, "podSignature.png");
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -52,16 +73,16 @@ public class SignaturePage extends AppCompatActivity implements MyButton.ButtonL
         drawingView = (DrawingView) findViewById(com.example.podlibrary.R.id.drawingView);
         drawingView.setDrawingCacheEnabled(true);
 
-        saveBtn = (Button) findViewById(R.id.saveBtn);
+        saveBtn = (Button) findViewById(R.id.btnConfirm);
         clearBtn = (Button) findViewById(R.id.clearBtn);
 
         progressBarHolder = (FrameLayout) findViewById(R.id.progressBarHolder);
 
-        mTextView = (TextView) findViewById(R.id.tvorderObject);
+       /* mTextView = (TextView) findViewById(R.id.tvorderObject);
         Serialisation orderObject = (Serialisation) getIntent().getSerializableExtra(SER_KEY);
         mTextView.setText("The orderObject is: " + orderObject + "/n" );
 
-        setContentView(mTextView);
+        setContentView(mTextView);*/
         }
 
 
@@ -99,8 +120,8 @@ public class SignaturePage extends AppCompatActivity implements MyButton.ButtonL
         final Bitmap signatureBitmap = getBitmapFromView(drawingView);
         //final File file = new File("/DCIM/podSignature.png");
         FileOutputStream ostream = null;
-        File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-        File file = new File(path, "podSignature.png");
+       // File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        //File file = new File(path, "podSignature.png");
 
         try {
             if ((!file.exists() || file.delete()) /*&& file.createNewFile()*/) {
@@ -141,15 +162,14 @@ public class SignaturePage extends AppCompatActivity implements MyButton.ButtonL
 
     @Override
     public void onSave(View view) {
-         int a = 1;
-       // if (saveSignature() )
         try {
             saveSignature();
-            new WaitingIcon().execute();
+          //  new WaitingIcon().execute();
+            onUpload();
+            Log.d(TAG, saveBtn.getText() + " is successfully pressed and saved.");
         } catch (Exception e) {
             Log.e(TAG, saveBtn.getText() + " is failed to save.");
         }
-        Log.d(TAG, saveBtn.getText() + " is successfully pressed and saved.");
     }
 
     @Override
@@ -177,6 +197,73 @@ public class SignaturePage extends AppCompatActivity implements MyButton.ButtonL
         super.onStop();
         active = false;
         Log.e(TAG, "Signature Page has stopped");
+    }
+
+    public void onUpload(){
+
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
+
+        Service service = new Retrofit.Builder().baseUrl("http://10.10.8.143:8085").client(client).build().create(Service.class);
+
+       // File file = new File(path, "podSignature.png");
+
+        RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), file);
+        MultipartBody.Part body = MultipartBody.Part.createFormData("upload", file.getName(), reqFile);
+        RequestBody name = RequestBody.create(MediaType.parse("text/plain"), "upload_test");
+
+        Call<ResponseBody> req = service.postImage(body, name);
+        req.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                // Do Something
+                Log.d(TAG,"Signature Page has been successfully uploaded to server");
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
+/*        JsonParser jsonParser = new JsonParser();
+        JsonObject jsonFile = (JsonObject) jsonParser.parse(loadJSONFromAsset());
+
+      //  File f = new File(path);
+        Ion.with(SignaturePage.this)
+                .load("http://10.10.8.143:8085/upload")
+                .setJsonObjectBody(jsonFile )
+                .asJsonObject()
+                .setCallback(new FutureCallback<JsonObject>() {
+                    @Override
+                    public void onCompleted(Exception e, JsonObject result) {
+                        Log.d(TAG,"Signature Page has been successfully uploaded to server");
+                    }
+                });*/
+    }
+
+    interface Service {
+        @Multipart
+        @POST("/upload")
+        Call<ResponseBody> postImage(@Part MultipartBody.Part image, @Part("name") RequestBody name);
+    }
+
+    public String loadJSONFromAsset() {
+        String json = null;
+        InputStream is = null;
+        try {
+            is = getAssets().open("config.json");
+            int size = is.available();
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            json = new String(buffer, "UTF-8");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return null;
+        } finally {
+            DataUtil.closeSilently(is);
+        }
+        return json;
     }
 
     private class WaitingIcon extends AsyncTask<Void, Void, Void> {

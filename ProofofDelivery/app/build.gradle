@@ -36,4 +36,7 @@ dependencies {
     compile project(":podlibrary")
     //compile ('com.example.podlibrary:podlibrary')
     compile('com.lalamove.podlibrary:drawingview:1.0.5')
+   // compile 'com.koushikdutta.ion:ion:2.+'
+    compile 'com.squareup.retrofit2:retrofit:2.1.0'
+    compile 'com.squareup.okhttp3:logging-interceptor:3.0.1'
 }

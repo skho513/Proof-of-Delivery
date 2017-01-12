@@ -12,19 +12,7 @@
     tools:context="com.example.podlibrary.SignaturePage"
     >
 
-    <Button
-        android:text="@string/btnSaveSignature"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/saveBtn"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="45dp"
-        android:layout_centerVertical="true"
-        android:onClick="onSave"
-        />
-
-    <Button
+    <!--<Button
         android:text="@string/btnCancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -32,12 +20,12 @@
         android:layout_toRightOf="@id/saveBtn"
         android:layout_alignBottom="@id/saveBtn"
         android:onClick="onCancel"
-        />
+        />-->
 
     <com.lalamove.drawingview.DrawingView
         android:id="@+id/drawingView"
         android:background="@color/white"
-        android:layout_above="@id/saveBtn"
+        android:layout_above="@id/btnConfirm"
         android:layout_centerVertical="true"
         android:layout_height="fill_parent"
         android:layout_width="fill_parent"
@@ -52,15 +40,21 @@
 
     <Button
         android:id="@+id/clearBtn"
-        android:layout_width="wrap_content"
+        android:layout_alignParentRight="true" android:text="X"
+        android:textColor="#FFF" android:background="@drawable/round_button_background"
+        android:gravity="center_vertical|center_horizontal"
+        android:layout_margin="5dp" android:layout_height="25dp"
+        android:layout_width="25dp" android:textSize="12sp" android:textStyle="bold"
+        android:onClick="onClear"
+        />
+<!--        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/btnClear"
         android:layout_alignParentLeft="true"
-        android:layout_alignBottom="@id/saveBtn"
-        android:layout_toLeftOf="@id/saveBtn"
+        android:layout_alignBottom="@id/btnConfirm"
+        android:layout_toLeftOf="@id/btnConfirm"
         android:layout_marginLeft="25dp"
-        android:onClick="onClear"
-       />
+        android:onClick="onClear"/>-->
 
     <FrameLayout
         android:id="@+id/progressBarHolder"
@@ -79,12 +73,25 @@
             android:layout_gravity="center" />
     </FrameLayout>
 
-    <TextView
-        android:id="@+id/tvorderObject"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/drawingView"
-        >
-    </TextView>
+    <Button
+        android:id="@+id/btnConfirm"
+        android:text="@string/btnConfirm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:onClick="onSave"
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@+id/clearBtn"
+        android:layout_alignEnd="@+id/clearBtn"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <!--  <TextView
+          android:id="@+id/tvorderObject"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:layout_above="@id/drawingView"
+          >
+      </TextView>-->
 
 </RelativeLayout>

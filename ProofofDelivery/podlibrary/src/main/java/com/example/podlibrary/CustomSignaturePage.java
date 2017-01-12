@@ -21,4 +21,9 @@ public class CustomSignaturePage extends SignaturePage implements MyButton.Butto
     public void onCancel(View view) {
         super.onCancel(view);
     }
+
+    @Override
+    public void onUpload(){
+        super.onUpload();
+    }
 }
