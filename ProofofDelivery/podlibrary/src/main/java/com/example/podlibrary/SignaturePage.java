@@ -13,6 +13,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.widget.Button;
@@ -48,10 +49,8 @@ public class SignaturePage extends AppCompatActivity implements MyButton.ButtonL
     private static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
     public static final String SER_KEY = "com.example.proofofdelivery.ser";
     private DrawingView drawingView;
-    private Button btnRequestSignature;
     static boolean active = false;
     String myLog = "myLog";
-   // String path;
 
     AlphaAnimation inAnimation;
     AlphaAnimation outAnimation;
@@ -60,15 +59,17 @@ public class SignaturePage extends AppCompatActivity implements MyButton.ButtonL
 
     private Button clearBtn;
     private Button saveBtn;
-    private TextView mTextView;
     File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
     File file = new File(path, "podSignature.png");
 
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
+    @Override) {
         super.onCreate(savedInstanceState);
         setContentView(com.example.podlibrary.R.layout.signaturepage);
+
+        setTitle("Collect Signature");
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         drawingView = (DrawingView) findViewById(com.example.podlibrary.R.id.drawingView);
         drawingView.setDrawingCacheEnabled(true);
@@ -77,14 +78,23 @@ public class SignaturePage extends AppCompatActivity implements MyButton.ButtonL
         clearBtn = (Button) findViewById(R.id.clearBtn);
 
         progressBarHolder = (FrameLayout) findViewById(R.id.progressBarHolder);
-
-       /* mTextView = (TextView) findViewById(R.id.tvorderObject);
-        Serialisation orderObject = (Serialisation) getIntent().getSerializableExtra(SER_KEY);
-        mTextView.setText("The orderObject is: " + orderObject + "/n" );
-
-        setContentView(mTextView);*/
         }
 
+    /**
+     * Defines actions after the back button on the action bar is pressed
+     * @param item the item on the action bar that is pressed
+     * @return
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
     /**
      * Saves a signature from {@link DrawingView} canvas to the file
@@ -226,20 +236,20 @@ public class SignaturePage extends AppCompatActivity implements MyButton.ButtonL
                 t.printStackTrace();
             }
         });
-/*        JsonParser jsonParser = new JsonParser();
-        JsonObject jsonFile = (JsonObject) jsonParser.parse(loadJSONFromAsset());
-
-      //  File f = new File(path);
-        Ion.with(SignaturePage.this)
-                .load("http://10.10.8.143:8085/upload")
-                .setJsonObjectBody(jsonFile )
-                .asJsonObject()
-                .setCallback(new FutureCallback<JsonObject>() {
-                    @Override
-                    public void onCompleted(Exception e, JsonObject result) {
-                        Log.d(TAG,"Signature Page has been successfully uploaded to server");
-                    }
-                });*/
+//        JsonParser jsonParser = new JsonParser();
+//        JsonObject jsonFile = (JsonObject) jsonParser.parse(loadJSONFromAsset());
+//
+//      //  File f = new File(path);
+//        Ion.with(SignaturePage.this)
+//                .load("http://10.10.8.143:8085/upload")
+//                .setJsonObjectBody(jsonFile )
+//                .asJsonObject()
+//                .setCallback(new FutureCallback<JsonObject>() {
+//                    @Override
+//                    public void onCompleted(Exception e, JsonObject result) {
+//                        Log.d(TAG,"Signature Page has been successfully uploaded to server");
+//                    }
+//                });
     }
 
     interface Service {
@@ -248,23 +258,23 @@ public class SignaturePage extends AppCompatActivity implements MyButton.ButtonL
         Call<ResponseBody> postImage(@Part MultipartBody.Part image, @Part("name") RequestBody name);
     }
 
-    public String loadJSONFromAsset() {
-        String json = null;
-        InputStream is = null;
-        try {
-            is = getAssets().open("config.json");
-            int size = is.available();
-            byte[] buffer = new byte[size];
-            is.read(buffer);
-            json = new String(buffer, "UTF-8");
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            return null;
-        } finally {
-            DataUtil.closeSilently(is);
-        }
-        return json;
-    }
+//    public String loadJSONFromAsset() {
+//        String json = null;
+//        InputStream is = null;
+//        try {
+//            is = getAssets().open("config.json");
+//            int size = is.available();
+//            byte[] buffer = new byte[size];
+//            is.read(buffer);
+//            json = new String(buffer, "UTF-8");
+//        } catch (IOException ex) {
+//            ex.printStackTrace();
+//            return null;
+//        } finally {
+//            DataUtil.closeSilently(is);
+//        }
+//        return json;
+//    }
 
     private class WaitingIcon extends AsyncTask<Void, Void, Void> {
 
@@ -289,7 +299,7 @@ public class SignaturePage extends AppCompatActivity implements MyButton.ButtonL
         }
 
         @Override
-        protected Void doInBackground(Void... params) {
+            protected Void doInBackground(Void... params) {
             try {
                 for (int i = 0; i < 2; i++) {
                     Log.d(myLog, "Saving signature in png... " + i);
