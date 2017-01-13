@@ -63,7 +63,8 @@ public class SignaturePage extends AppCompatActivity implements MyButton.ButtonL
     File file = new File(path, "podSignature.png");
 
 
-    @Override) {
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(com.example.podlibrary.R.layout.signaturepage);
 
