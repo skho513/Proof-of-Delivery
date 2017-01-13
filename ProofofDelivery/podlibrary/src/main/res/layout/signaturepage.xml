@@ -25,7 +25,7 @@
     <com.lalamove.drawingview.DrawingView
         android:id="@+id/drawingView"
         android:background="@color/white"
-        android:layout_above="@id/btnConfirm"
+        android:layout_above="@+id/btnConfirm"
         android:layout_centerVertical="true"
         android:layout_height="fill_parent"
         android:layout_width="fill_parent"
