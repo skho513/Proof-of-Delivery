@@ -44,7 +44,7 @@ import retrofit2.http.POST;
 import retrofit2.http.Part;
 
 
-public class SignaturePage extends AppCompatActivity implements MyButton.ButtonListener{
+public class SignaturePage extends AppCompatActivity implements MyButton.ButtonListener {
     public static final String TAG = SignaturePage.class.getSimpleName();
     private static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
     public static final String SER_KEY = "com.example.proofofdelivery.ser";
@@ -62,7 +62,6 @@ public class SignaturePage extends AppCompatActivity implements MyButton.ButtonL
     File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
     File file = new File(path, "podSignature.png");
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,22 +78,23 @@ public class SignaturePage extends AppCompatActivity implements MyButton.ButtonL
         clearBtn = (Button) findViewById(R.id.clearBtn);
 
         progressBarHolder = (FrameLayout) findViewById(R.id.progressBarHolder);
-        }
+    }
 
-    /**
-     * Defines actions after the back button on the action bar is pressed
-     * @param item the item on the action bar that is pressed
-     * @return
-     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                finish();
+                onBackPressed();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.activity_slide_in_left, R.anim.activity_slide_out_right);
     }
 
     /**
@@ -131,7 +131,7 @@ public class SignaturePage extends AppCompatActivity implements MyButton.ButtonL
         final Bitmap signatureBitmap = getBitmapFromView(drawingView);
         //final File file = new File("/DCIM/podSignature.png");
         FileOutputStream ostream = null;
-       // File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        // File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
         //File file = new File(path, "podSignature.png");
 
         try {
@@ -175,7 +175,7 @@ public class SignaturePage extends AppCompatActivity implements MyButton.ButtonL
     public void onSave(View view) {
         try {
             saveSignature();
-          //  new WaitingIcon().execute();
+            //  new WaitingIcon().execute();
             onUpload();
             Log.d(TAG, saveBtn.getText() + " is successfully pressed and saved.");
         } catch (Exception e) {
@@ -210,7 +210,7 @@ public class SignaturePage extends AppCompatActivity implements MyButton.ButtonL
         Log.e(TAG, "Signature Page has stopped");
     }
 
-    public void onUpload(){
+    public void onUpload() {
 
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
@@ -218,7 +218,7 @@ public class SignaturePage extends AppCompatActivity implements MyButton.ButtonL
 
         Service service = new Retrofit.Builder().baseUrl("http://10.10.8.143:8085").client(client).build().create(Service.class);
 
-       // File file = new File(path, "podSignature.png");
+        // File file = new File(path, "podSignature.png");
 
         RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), file);
         MultipartBody.Part body = MultipartBody.Part.createFormData("upload", file.getName(), reqFile);
@@ -229,7 +229,7 @@ public class SignaturePage extends AppCompatActivity implements MyButton.ButtonL
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 // Do Something
-                Log.d(TAG,"Signature Page has been successfully uploaded to server");
+                Log.d(TAG, "Signature Page has been successfully uploaded to server");
             }
 
             @Override
@@ -300,7 +300,7 @@ public class SignaturePage extends AppCompatActivity implements MyButton.ButtonL
         }
 
         @Override
-            protected Void doInBackground(Void... params) {
+        protected Void doInBackground(Void... params) {
             try {
                 for (int i = 0; i < 2; i++) {
                     Log.d(myLog, "Saving signature in png... " + i);
