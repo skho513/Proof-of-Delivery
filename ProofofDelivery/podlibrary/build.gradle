@@ -40,6 +40,7 @@ dependencies {
     compile 'com.squareup.okhttp3:logging-interceptor:3.4.1'
   //  compile 'com.android.support.test.espresso:espresso-core:2.2.2'
    // compile 'com.android.volley:volley:1.0.0'
+    compile 'com.android.support:support-core-utils:24.1.0'
 }
 
 publishing {
