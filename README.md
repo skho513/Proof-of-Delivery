@@ -1,4 +1,7 @@
 # android-pod-sdk
-This is for the Proof of Delivery 
-## Authors: Daniel Kho, Brian Yeung and Nance Chen
-### Install
+Generates a modal view for the driver app to collect and save the signature of a recipient
+## Dependency Declaration
+### Maven
+### Gradle
+### Ivy
+### Sbt
