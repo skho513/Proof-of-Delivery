@@ -1,33 +1,30 @@
 package com.example.podlibrary;
 
 import android.Manifest;
+import android.app.DialogFragment;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.AlphaAnimation;
 import android.widget.Button;
-import android.widget.FrameLayout;
-import android.widget.TextView;
+import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.lalamove.drawingview.DrawingView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.concurrent.TimeUnit;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -43,22 +40,15 @@ import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
 
-
-public class SignaturePage extends AppCompatActivity implements MyButton.ButtonListener {
-    public static final String TAG = SignaturePage.class.getSimpleName();
+public class SignatureActivity extends AppCompatActivity implements MyButton.ButtonListener {
+    public static final String TAG = SignatureActivity.class.getSimpleName();
     private static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
     public static final String SER_KEY = "com.example.proofofdelivery.ser";
     private DrawingView drawingView;
     static boolean active = false;
-    String myLog = "myLog";
-
-    AlphaAnimation inAnimation;
-    AlphaAnimation outAnimation;
-
-    FrameLayout progressBarHolder;
-
     private Button clearBtn;
     private Button saveBtn;
+    private ImageView editBtn;
     File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
     File file = new File(path, "podSignature.png");
 
@@ -67,17 +57,25 @@ public class SignaturePage extends AppCompatActivity implements MyButton.ButtonL
         super.onCreate(savedInstanceState);
         setContentView(com.example.podlibrary.R.layout.signaturepage);
 
-        setTitle("Collect Signature");
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         drawingView = (DrawingView) findViewById(com.example.podlibrary.R.id.drawingView);
         drawingView.setDrawingCacheEnabled(true);
 
         saveBtn = (Button) findViewById(R.id.btnConfirm);
         clearBtn = (Button) findViewById(R.id.clearBtn);
 
-        progressBarHolder = (FrameLayout) findViewById(R.id.progressBarHolder);
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+        getSupportActionBar().setTitle("Collect Signature");
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        editBtn = (ImageView) findViewById(R.id.ivEdit);
+        editBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DialogFragment enterDetails = new EnterDetailsDialog();
+                enterDetails.show(getFragmentManager(), "Enter Details");
+            }
+        });
     }
 
     @Override
@@ -102,11 +100,11 @@ public class SignaturePage extends AppCompatActivity implements MyButton.ButtonL
      */
     private void saveSignature() {
         // Here, thisActivity is the current activity
-        if (ContextCompat.checkSelfPermission(SignaturePage.this, Manifest.permission.READ_EXTERNAL_STORAGE)
+        if (ContextCompat.checkSelfPermission(SignatureActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
 
             // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(SignaturePage.this,
+            if (ActivityCompat.shouldShowRequestPermissionRationale(SignatureActivity.this,
                     Manifest.permission.READ_EXTERNAL_STORAGE)) {
 
                 // Show an explanation to the user *asynchronously* -- don't block
@@ -117,7 +115,7 @@ public class SignaturePage extends AppCompatActivity implements MyButton.ButtonL
 
                 // No explanation needed, we can request the permission.
 
-                ActivityCompat.requestPermissions(SignaturePage.this,
+                ActivityCompat.requestPermissions(SignatureActivity.this,
                         new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                         MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
 
@@ -175,7 +173,6 @@ public class SignaturePage extends AppCompatActivity implements MyButton.ButtonL
     public void onSave(View view) {
         try {
             saveSignature();
-            //  new WaitingIcon().execute();
             onUpload();
             Log.d(TAG, saveBtn.getText() + " is successfully pressed and saved.");
         } catch (Exception e) {
@@ -241,7 +238,7 @@ public class SignaturePage extends AppCompatActivity implements MyButton.ButtonL
 //        JsonObject jsonFile = (JsonObject) jsonParser.parse(loadJSONFromAsset());
 //
 //      //  File f = new File(path);
-//        Ion.with(SignaturePage.this)
+//        Ion.with(SignatureActivity.this)
 //                .load("http://10.10.8.143:8085/upload")
 //                .setJsonObjectBody(jsonFile )
 //                .asJsonObject()
@@ -253,11 +250,11 @@ public class SignaturePage extends AppCompatActivity implements MyButton.ButtonL
 //                });
     }
 
-    interface Service {
-        @Multipart
-        @POST("/upload")
-        Call<ResponseBody> postImage(@Part MultipartBody.Part image, @Part("name") RequestBody name);
-    }
+interface Service {
+    @Multipart
+    @POST("/upload")
+    Call<ResponseBody> postImage(@Part MultipartBody.Part image, @Part("name") RequestBody name);
+}
 
 //    public String loadJSONFromAsset() {
 //        String json = null;
@@ -277,39 +274,4 @@ public class SignaturePage extends AppCompatActivity implements MyButton.ButtonL
 //        return json;
 //    }
 
-    private class WaitingIcon extends AsyncTask<Void, Void, Void> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            saveBtn.setEnabled(false);
-            inAnimation = new AlphaAnimation(0f, 1f);
-            inAnimation.setDuration(200);
-            progressBarHolder.setAnimation(inAnimation);
-            progressBarHolder.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            outAnimation = new AlphaAnimation(1f, 0f);
-            outAnimation.setDuration(200);
-            progressBarHolder.setAnimation(outAnimation);
-            progressBarHolder.setVisibility(View.GONE);
-            saveBtn.setEnabled(true);
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            try {
-                for (int i = 0; i < 2; i++) {
-                    Log.d(myLog, "Saving signature in png... " + i);
-                    TimeUnit.SECONDS.sleep(1);
-                }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-    }
 }

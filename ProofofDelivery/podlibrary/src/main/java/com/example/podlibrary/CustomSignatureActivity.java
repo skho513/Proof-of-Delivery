@@ -6,7 +6,7 @@ import android.view.View;
  * Created by Buzz on 05/01/2017.
  */
 
-public class CustomSignaturePage extends SignaturePage implements MyButton.ButtonListener {
+public class CustomSignatureActivity extends SignatureActivity implements MyButton.ButtonListener {
     @Override
     public void onSave(View view) {
         super.onSave(view);

@@ -6,7 +6,9 @@
         android:allowBackup="true"
         android:label="@string/app_name"
         android:supportsRtl="true">
-        <activity android:name=".SignaturePage"/>
+        <activity
+            android:name=".SignatureActivity"
+            android:theme="@style/PodTheme" />
 
     </application>
 

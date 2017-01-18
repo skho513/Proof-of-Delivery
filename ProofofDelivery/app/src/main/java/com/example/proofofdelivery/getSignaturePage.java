@@ -9,7 +9,7 @@ import android.widget.Button;
 
 import com.example.podlibrary.MyButton;
 import com.example.podlibrary.Serialisation;
-import com.example.podlibrary.SignaturePage;
+import com.example.podlibrary.SignatureActivity;
 
 public class getSignaturePage extends AppCompatActivity implements MyButton.ButtonListener {
 
@@ -32,7 +32,7 @@ public class getSignaturePage extends AppCompatActivity implements MyButton.Butt
 
         Serialisation orderObject = new Serialisation();
         orderObject.Serialisation("A23H23UK42H42O25N24I24IH");
-        Intent toSignaturePage = new Intent(this,SignaturePage.class); // For future changes, change SignaturePage.class to CustomSignaturePage.class
+        Intent toSignaturePage = new Intent(this,SignatureActivity.class); // For future changes, change SignatureActivity.class to CustomSignatureActivity.class
         Bundle passingKey = new Bundle();
         passingKey.putSerializable(SER_KEY, orderObject); // Pass orderObject
         toSignaturePage.putExtras(passingKey);

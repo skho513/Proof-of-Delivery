@@ -6,7 +6,7 @@ import java.io.Closeable;
 import java.io.IOException;
 
 public class DataUtil {
-    public static final String TAG = SignaturePage.class.getSimpleName();
+    public static final String TAG = SignatureActivity.class.getSimpleName();
     public static void closeSilently(Closeable closeable){
         try {
             if (closeable != null)

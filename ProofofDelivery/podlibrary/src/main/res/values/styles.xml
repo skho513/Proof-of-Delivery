@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Base application theme. -->
+    <style name="AppBaseTheme" parent="Theme.AppCompat.Light.NoActionBar" />
+
+    <!-- Application Core theme. -->
+    <style name="PodTheme" parent="AppBaseTheme">
+        <item name="windowActionModeOverlay">true</item>       
+        <item name="windowActionBar">false</item>
+    </style>
+</resources>

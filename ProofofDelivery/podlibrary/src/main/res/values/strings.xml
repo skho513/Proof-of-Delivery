@@ -6,4 +6,9 @@
     <string name="btnCancel">Cancel</string>
     <string name="btnClear">Clear</string>
     <string name="btnConfirm">Confirm</string>
+    <string name="submit">Submit</string>
+    <string name="recipient_address">Recipient address</string>
+    <string name="recipient_details">Additional recipient info</string>
+    <string name="agreement">By signing, I confirm that the nature or condition for the to be good sent are not in violation of any laws</string>
+    <string name="dialog_confirm">Please confirm recipient name</string>
 </resources>
