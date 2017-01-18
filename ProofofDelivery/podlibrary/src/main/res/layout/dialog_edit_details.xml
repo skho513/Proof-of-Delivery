@@ -5,22 +5,39 @@
     android:layout_height="wrap_content">
     
     <TextView
-        android:id="@+id/dialog_confirm"
+        android:id="@+id/dialog_message"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/margin_normal"
-        android:layout_marginRight="@dimen/margin_normal"
-        android:text="@string/dialog_confirm"
+        android:layout_margin="@dimen/padding_medium"
+        android:text="@string/dialog_message"
         android:textAlignment="center"
-        android:textColor="@color/black"/>
+        android:textColor="@color/black"
+        android:textStyle="bold" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/dialog_message"
+        android:background="@color/grey" />
 
     <EditText
         android:id="@+id/dialog_details_field"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/dialog_confirm"
-        tools:text="Recipient name (Display if any)"/>
+        android:layout_below="@+id/divider"
+        android:layout_margin="@dimen/margin_normal"
+        android:background="@color/white"
+        tools:text="Recipient name (Display if any)" />
 
-
+    <Button
+        android:id="@+id/btnSubmit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/submit"
+        android:textColor="@color/white"
+        android:background="@color/lalamove_orange"
+        android:layout_margin="@dimen/margin_normal"
+        android:layout_below="@+id/dialog_details_field"/>
 
 </RelativeLayout>

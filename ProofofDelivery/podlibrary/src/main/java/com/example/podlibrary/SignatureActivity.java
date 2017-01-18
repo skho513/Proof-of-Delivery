@@ -1,7 +1,6 @@
 package com.example.podlibrary;
 
 import android.Manifest;
-import android.app.DialogFragment;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -10,6 +9,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -17,8 +17,8 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.lalamove.drawingview.DrawingView;
 
@@ -40,15 +40,16 @@ import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
 
-public class SignatureActivity extends AppCompatActivity implements MyButton.ButtonListener {
+public class SignatureActivity extends AppCompatActivity implements MyButton.ButtonListener, EnterDetailsDialog.OnEditConfirmListener, View.OnClickListener {
     public static final String TAG = SignatureActivity.class.getSimpleName();
     private static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
-    public static final String SER_KEY = "com.example.proofofdelivery.ser";
+    public static final String KEY_ORDER = "KEY_ORDER";
     private DrawingView drawingView;
-    static boolean active = false;
     private Button clearBtn;
     private Button saveBtn;
     private ImageView editBtn;
+    private TextView tvRecipientDetails;
+    private Order order;
     File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
     File file = new File(path, "podSignature.png");
 
@@ -57,11 +58,14 @@ public class SignatureActivity extends AppCompatActivity implements MyButton.But
         super.onCreate(savedInstanceState);
         setContentView(com.example.podlibrary.R.layout.signaturepage);
 
+        order = (Order) getIntent().getSerializableExtra(KEY_ORDER);
         drawingView = (DrawingView) findViewById(com.example.podlibrary.R.id.drawingView);
         drawingView.setDrawingCacheEnabled(true);
 
         saveBtn = (Button) findViewById(R.id.btnConfirm);
         clearBtn = (Button) findViewById(R.id.clearBtn);
+        tvRecipientDetails = (TextView) findViewById(R.id.tvRecipientDetails);
+        tvRecipientDetails.setText(order.getRecipientName());
 
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         getSupportActionBar().setTitle("Collect Signature");
@@ -69,13 +73,7 @@ public class SignatureActivity extends AppCompatActivity implements MyButton.But
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         editBtn = (ImageView) findViewById(R.id.ivEdit);
-        editBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                DialogFragment enterDetails = new EnterDetailsDialog();
-                enterDetails.show(getFragmentManager(), "Enter Details");
-            }
-        });
+        editBtn.setOnClickListener(this);
     }
 
     @Override
@@ -197,14 +195,31 @@ public class SignatureActivity extends AppCompatActivity implements MyButton.But
 
     public void onStart() {
         super.onStart();
-        active = true;
-        Log.d(TAG, "Signature Page has been successfully loaded.");
     }
 
     public void onStop() {
         super.onStop();
-        active = false;
-        Log.e(TAG, "Signature Page has stopped");
+    }
+
+    @Override
+    public void onConfirm(String recipientName) {
+        tvRecipientDetails.setText(recipientName);
+        order.setRecipientName(recipientName);
+    }
+
+    @Override
+    public void onClick(View view) {
+        if(view.getId()==R.id.ivEdit){
+            showDetailConfirmationDialog();
+        }
+    }
+
+    private void showDetailConfirmationDialog() {
+        DialogFragment enterDetails = new EnterDetailsDialog();
+        Bundle bundle = new Bundle();
+        bundle.putString(EnterDetailsDialog.KEY_RECIPIENT_NAME, order.getRecipientName());
+        enterDetails.setArguments(bundle);
+        enterDetails.show(getSupportFragmentManager(), "Enter Details");
     }
 
     public void onUpload() {
@@ -250,7 +265,7 @@ public class SignatureActivity extends AppCompatActivity implements MyButton.But
 //                });
     }
 
-interface Service {
+    interface Service {
     @Multipart
     @POST("/upload")
     Call<ResponseBody> postImage(@Part MultipartBody.Part image, @Part("name") RequestBody name);

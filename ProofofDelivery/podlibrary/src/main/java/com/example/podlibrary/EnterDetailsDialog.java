@@ -1,42 +1,60 @@
 package com.example.podlibrary;
 
-import android.app.Activity;
-import android.app.DialogFragment;
-import android.content.DialogInterface;
+import android.app.Dialog;
+import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
+import android.view.View;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.EditText;
 
-public class EnterDetailsDialog extends DialogFragment{
+public class EnterDetailsDialog extends DialogFragment {
+    public static final String KEY_RECIPIENT_NAME = "KEY_RECIPIENT_NAME";
+    EditText details;
+    Button btnSubmit;
 
-//    public interface DialogListener {
-//        void onDialogPositiveClick(DialogFragment dialog);
-//    }
-//
-//    DialogListener mListener;
+    public interface OnEditConfirmListener {
+        void onConfirm(String recipientName);
+    }
+
+    OnEditConfirmListener listener;
 
     @Override
     public android.app.Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        builder.setView(inflater.inflate(R.layout.dialog_edit_details, null))
-                .setPositiveButton(R.string.submit, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        // sign in the user ...
-                    }
-                });
-        return builder.create();
+        View root = inflater.inflate(R.layout.dialog_edit_details, null);
+        btnSubmit = (Button) root.findViewById(R.id.btnSubmit);
+        btnSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (listener != null) {
+                    listener.onConfirm(details.getText().toString());
+                }
+                dismiss();
+            }
+        });
+        details = (EditText) root.findViewById(R.id.dialog_details_field);
+        details.setText(getArguments().getString(KEY_RECIPIENT_NAME));
+        details.setSelection(details.getText().length());
+        return new AlertDialog.Builder(getActivity()).setView(root).create();
     }
 
-//    @Override
-//    public void onAttach(Activity activity) {
-//        super.onAttach(activity);
-//        try {
-//            mListener = (DialogListener) activity;
-//        } catch (ClassCastException e) {
-//            throw new ClassCastException(activity.toString()
-//                    + " must implement NoticeDialogListener");
-//        }
-//    }
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            listener = (OnEditConfirmListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement NoticeDialogListener");
+        }
+    }
+    
+    public void setupDialog(Dialog dialog, int style) {
+        super.setupDialog(dialog, style);
+        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN | WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        }
 }
