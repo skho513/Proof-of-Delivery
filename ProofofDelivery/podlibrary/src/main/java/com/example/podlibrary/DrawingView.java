@@ -20,7 +20,6 @@ public class DrawingView extends View {
     public int height;
     private Path path;
     private Paint paintPen;
-    private boolean forceClear;
 
     public DrawingView(Context context) {
         this(context, null);
@@ -54,16 +53,9 @@ public class DrawingView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-
-        if (forceClear) {
-            path.reset();
-            forceClear = false;
-        } else {
-            super.onDraw(canvas);
-            canvas.drawPath(path, paintPen);
-            canvas.drawColor(Color.TRANSPARENT);
-        }
-
+        super.onDraw(canvas);
+        canvas.drawPath(path, paintPen);
+        canvas.drawColor(Color.TRANSPARENT);
     }
 
     @Override
@@ -85,7 +77,7 @@ public class DrawingView extends View {
     }
 
     public void clearView() {
-        forceClear = true;
+        path.reset();
         invalidate();
     }
 
