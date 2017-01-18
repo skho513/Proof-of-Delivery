@@ -20,8 +20,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
-import com.lalamove.drawingview.DrawingView;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -57,7 +55,7 @@ public class SignatureActivity extends AppCompatActivity implements MyButton.But
         super.onCreate(savedInstanceState);
         setContentView(com.example.podlibrary.R.layout.signaturepage);
 
-        drawingView = (DrawingView) findViewById(com.example.podlibrary.R.id.drawingView);
+        drawingView = (DrawingView) findViewById(R.id.drawingView);
         drawingView.setDrawingCacheEnabled(true);
 
         saveBtn = (Button) findViewById(R.id.btnConfirm);
