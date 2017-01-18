@@ -28,7 +28,7 @@
         android:id="@+id/ivEdit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/recipient_details"
+        android:layout_alignBottom="@+id/tvRecipientDetails"
         android:layout_alignParentRight="true"
         android:layout_alignTop="@+id/ivLocationHint"
         android:paddingRight="@dimen/padding_medium"
@@ -36,7 +36,7 @@
         android:src="@drawable/btn_editinfo" />
 
     <TextView
-        android:id="@+id/recipient_address"
+        android:id="@+id/tvRecipientAddress"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/ivLocationHint"
@@ -48,12 +48,12 @@
         android:textColor="@color/black" />
 
     <TextView
-        android:id="@+id/recipient_details"
+        android:id="@+id/tvRecipientDetails"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/recipient_address"
-        android:layout_alignRight="@+id/recipient_address"
-        android:layout_below="@id/recipient_address"
+        android:layout_alignLeft="@+id/tvRecipientAddress"
+        android:layout_alignRight="@+id/tvRecipientAddress"
+        android:layout_below="@id/tvRecipientAddress"
         android:padding="@dimen/margin_normal"
         tools:text="Additonal recipient info" />
 
@@ -63,7 +63,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/recipient_details"
+        android:layout_below="@+id/tvRecipientDetails"
         android:background="@null"
         android:drawableLeft="@drawable/btn_clearsignature"
         android:onClick="onClear"
@@ -74,7 +74,7 @@
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_below="@id/recipient_details"
+        android:layout_below="@id/tvRecipientDetails"
         android:background="@color/grey" />
 
     <com.lalamove.drawingview.DrawingView
@@ -90,7 +90,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@color/lalamove_orange"
+        android:background="@drawable/lala_button"
         android:onClick="onSave"
         android:text="@string/btnConfirm"
         android:textColor="@color/white" />
