@@ -21,6 +21,12 @@ public class DrawingView extends View {
     private Path path;
     private Paint paintPen;
 
+    public interface DrawStateListener {
+        void onDrawStarted();
+    }
+
+    DrawStateListener listener;
+
     public DrawingView(Context context) {
         this(context, null);
     }
@@ -51,6 +57,10 @@ public class DrawingView extends View {
         paintPen.setStrokeWidth(12);
     }
 
+    public void setDrawStateListener (DrawStateListener listener) {
+        this.listener = listener;
+    }
+
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
@@ -63,6 +73,9 @@ public class DrawingView extends View {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 path.moveTo(event.getX(), event.getY());
+                if (!path.isEmpty() && listener != null) {
+                    listener.onDrawStarted();
+                }
                 break;
 
             case MotionEvent.ACTION_MOVE:
@@ -80,5 +93,4 @@ public class DrawingView extends View {
         path.reset();
         invalidate();
     }
-
 }

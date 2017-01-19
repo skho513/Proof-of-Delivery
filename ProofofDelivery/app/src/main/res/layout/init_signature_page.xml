@@ -15,6 +15,6 @@
         android:layout_height="wrap_content"
         android:id="@+id/btnSignaturePage"
         android:text="@string/btnSignaturePage"
-        android:onClick="SignaturePage"
+        android:onClick="gotoSignaturePage"
         />
 </RelativeLayout>

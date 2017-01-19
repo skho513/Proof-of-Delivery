@@ -46,5 +46,4 @@ public class getSignaturePage extends AppCompatActivity implements MyButton.Butt
     public void onClear(View view) {
 
     }
-
 }

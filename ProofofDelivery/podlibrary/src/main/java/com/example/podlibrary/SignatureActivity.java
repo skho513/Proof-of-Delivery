@@ -12,6 +12,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -19,8 +20,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.lalamove.drawingview.DrawingView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -40,11 +39,13 @@ import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
 
-public class SignatureActivity extends AppCompatActivity implements MyButton.ButtonListener, EnterDetailsDialog.OnEditConfirmListener, View.OnClickListener {
+public class SignatureActivity extends AppCompatActivity implements MyButton.ButtonListener, EnterDetailsDialog.OnEditConfirmListener,
+        View.OnClickListener, DrawingView.DrawStateListener {
     public static final String TAG = SignatureActivity.class.getSimpleName();
     private static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
     public static final String KEY_ORDER = "KEY_ORDER";
     private DrawingView drawingView;
+    private View ivEmptySignature;
     private Button clearBtn;
     private Button saveBtn;
     private ImageView editBtn;
@@ -61,6 +62,8 @@ public class SignatureActivity extends AppCompatActivity implements MyButton.But
         order = (Order) getIntent().getSerializableExtra(KEY_ORDER);
         drawingView = (DrawingView) findViewById(R.id.drawingView);
         drawingView.setDrawingCacheEnabled(true);
+        ivEmptySignature = findViewById(R.id.ivEmptySignature);
+        drawingView.setDrawStateListener(this);
 
         saveBtn = (Button) findViewById(R.id.btnConfirm);
         clearBtn = (Button) findViewById(R.id.clearBtn);
@@ -91,61 +94,6 @@ public class SignatureActivity extends AppCompatActivity implements MyButton.But
     public void onBackPressed() {
         super.onBackPressed();
         overridePendingTransition(R.anim.activity_slide_in_left, R.anim.activity_slide_out_right);
-    }
-
-    /**
-     * Saves a signature from {@link DrawingView} canvas to the file
-     */
-    private void saveSignature() {
-        // Here, thisActivity is the current activity
-        if (ContextCompat.checkSelfPermission(SignatureActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(SignatureActivity.this,
-                    Manifest.permission.READ_EXTERNAL_STORAGE)) {
-
-                // Show an explanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
-
-            } else {
-
-                // No explanation needed, we can request the permission.
-
-                ActivityCompat.requestPermissions(SignatureActivity.this,
-                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                        MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
-
-                // MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE is an
-                // app-defined int constant. The callback method gets the
-                // result of the request.
-            }
-        }
-
-        //final Bitmap bitmap = drawingView.getDrawingCache();
-        final Bitmap signatureBitmap = getBitmapFromView(drawingView);
-        //final File file = new File("/DCIM/podSignature.png");
-        FileOutputStream ostream = null;
-        // File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-        //File file = new File(path, "podSignature.png");
-
-        try {
-            if ((!file.exists() || file.delete()) /*&& file.createNewFile()*/) {
-                ostream = new FileOutputStream(file);
-                Bitmap signatureSize = Bitmap.createScaledBitmap(signatureBitmap, 600, 800, false);
-                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-                signatureSize.compress(Bitmap.CompressFormat.PNG, 100, ostream);
-                file.createNewFile();
-                ostream.write(bytes.toByteArray());
-            } else {
-                Log.w(TAG, "Cannot create a file");
-            }
-        } catch (Exception e) {
-            Log.e(TAG, "Error while writing a file", e);
-        } finally {
-            DataUtil.closeSilently(ostream);
-        }
     }
 
     public static Bitmap getBitmapFromView(View view) {
@@ -214,12 +162,72 @@ public class SignatureActivity extends AppCompatActivity implements MyButton.But
         }
     }
 
+    @Override
+    public void onDrawStarted() {
+        ivEmptySignature.setVisibility(View.GONE);
+    }
+
     private void showDetailConfirmationDialog() {
         DialogFragment enterDetails = new EnterDetailsDialog();
         Bundle bundle = new Bundle();
         bundle.putString(EnterDetailsDialog.KEY_RECIPIENT_NAME, order.getRecipientName());
         enterDetails.setArguments(bundle);
         enterDetails.show(getSupportFragmentManager(), "Enter Details");
+    }
+
+    /**
+     * Saves a signature from {@link DrawingView} canvas to the file
+     */
+    private void saveSignature() {
+        // Here, thisActivity is the current activity
+        if (ContextCompat.checkSelfPermission(SignatureActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(SignatureActivity.this,
+                    Manifest.permission.READ_EXTERNAL_STORAGE)) {
+
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+
+            } else {
+
+                // No explanation needed, we can request the permission.
+
+                ActivityCompat.requestPermissions(SignatureActivity.this,
+                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                        MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+
+                // MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE is an
+                // app-defined int constant. The callback method gets the
+                // result of the request.
+            }
+        }
+
+        //final Bitmap bitmap = drawingView.getDrawingCache();
+        final Bitmap signatureBitmap = getBitmapFromView(drawingView);
+        //final File file = new File("/DCIM/podSignature.png");
+        FileOutputStream ostream = null;
+        // File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        //File file = new File(path, "podSignature.png");
+
+        try {
+            if ((!file.exists() || file.delete()) /*&& file.createNewFile()*/) {
+                ostream = new FileOutputStream(file);
+                Bitmap signatureSize = Bitmap.createScaledBitmap(signatureBitmap, 600, 800, false);
+                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                signatureSize.compress(Bitmap.CompressFormat.PNG, 100, ostream);
+                file.createNewFile();
+                ostream.write(bytes.toByteArray());
+            } else {
+                Log.w(TAG, "Cannot create a file");
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Error while writing a file", e);
+        } finally {
+            DataUtil.closeSilently(ostream);
+        }
     }
 
     public void onUpload() {

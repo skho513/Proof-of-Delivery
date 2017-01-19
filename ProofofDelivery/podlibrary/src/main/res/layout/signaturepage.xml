@@ -77,7 +77,7 @@
         android:layout_below="@id/tvRecipientDetails"
         android:background="@color/grey" />
 
-    <com.lalamove.drawingview.DrawingView
+    <com.example.podlibrary.DrawingView
         android:id="@+id/drawingView"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
@@ -94,5 +94,29 @@
         android:onClick="onSave"
         android:text="@string/btnConfirm"
         android:textColor="@color/white" />
+
+    <LinearLayout
+        android:id="@+id/ivEmptySignature"
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/drawingView"
+        android:layout_alignBottom="@id/drawingView"
+        android:layout_margin="56dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/ic_emptysignature" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/agreement"
+            android:textAlignment="center"
+            android:textColor="@color/grey"/>
+
+    </LinearLayout>
 
 </RelativeLayout>
