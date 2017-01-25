@@ -20,8 +20,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/toolbar"
-        android:layout_marginLeft="@dimen/margin_normal"
-        android:layout_marginTop="@dimen/margin_normal"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="16dp"
         android:background="@drawable/ic_signature_address" />
 
     <ImageView
@@ -31,8 +32,8 @@
         android:layout_alignBottom="@+id/tvRecipientDetails"
         android:layout_alignParentRight="true"
         android:layout_alignTop="@+id/ivLocationHint"
-        android:paddingRight="@dimen/padding_medium"
-        android:paddingLeft="@dimen/margin_normal"
+        android:paddingRight="16dp"
+        android:paddingLeft="8dp"
         android:src="@drawable/btn_editinfo" />
 
     <TextView
@@ -40,12 +41,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/ivLocationHint"
-        android:layout_marginLeft="@dimen/margin_normal"
         android:layout_toLeftOf="@+id/ivEdit"
         android:layout_toRightOf="@+id/ivLocationHint"
-        android:padding="@dimen/margin_normal"
         android:text="@string/recipient_address"
-        android:textColor="@color/black" />
+        android:textColor="@color/text" />
 
     <TextView
         android:id="@+id/tvRecipientDetails"
@@ -54,7 +53,8 @@
         android:layout_alignLeft="@+id/tvRecipientAddress"
         android:layout_alignRight="@+id/tvRecipientAddress"
         android:layout_below="@id/tvRecipientAddress"
-        android:padding="@dimen/margin_normal"
+        android:paddingBottom="8dp"
+        android:textColor="@color/text"
         tools:text="Additonal recipient info" />
 
     <Button
@@ -68,14 +68,15 @@
         android:drawableLeft="@drawable/btn_clearsignature"
         android:onClick="onClear"
         android:text="@string/btnClear"
-        android:textColor="@color/lalamove_orange" />
+        android:textColor="@color/lalamove_orange"
+        android:layout_marginTop="1dp"/>
 
     <View
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_below="@id/tvRecipientDetails"
-        android:background="@color/grey" />
+        android:background="@color/divider" />
 
     <com.example.podlibrary.DrawingView
         android:id="@+id/drawingView"
@@ -83,40 +84,67 @@
         android:layout_height="fill_parent"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/divider" />
+        android:layout_below="@+id/divider"
+        android:layout_above="@+id/confirmation"/>
 
-    <Button
-        android:id="@+id/btnConfirm"
+    <RelativeLayout
+        android:id="@+id/confirmation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingTop="12dp"
         android:layout_alignParentBottom="true"
-        android:background="@drawable/lala_button"
-        android:onClick="onSave"
-        android:text="@string/btnConfirm"
-        android:textColor="@color/white" />
+        android:background="@color/button_underlay">
+
+        <TextView
+            android:id="@+id/tvAgreement"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="@string/agreement"
+            android:layout_alignParentTop="true"
+            android:textColor="@color/grey_text"
+            android:textAlignment="center"
+            android:drawableLeft="@drawable/ic_tnc_checkbox"
+            android:drawablePadding="8dp"/>
+
+        <Button
+            android:layout_below="@+id/tvAgreement"
+            android:id="@+id/btnConfirm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/lala_button"
+            android:layout_margin="8dp"
+            android:onClick="onSave"
+            android:text="@string/btnConfirm"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textAllCaps="false" />
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/ivEmptySignature"
         android:orientation="vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/drawingView"
-        android:layout_alignBottom="@id/drawingView"
-        android:layout_margin="56dp">
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true">
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_gravity="center_horizontal"
             android:background="@drawable/ic_emptysignature" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="210dp"
             android:layout_height="wrap_content"
-            android:text="@string/agreement"
+            android:layout_marginTop="16dp"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/verification"
             android:textAlignment="center"
-            android:textColor="@color/grey"/>
-
+            android:textSize="14sp"
+            android:textColor="@color/ivEmptySig"/>
     </LinearLayout>
 
 </RelativeLayout>

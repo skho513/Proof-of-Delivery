@@ -1,34 +1,47 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    android:layout_width="wrap_content"
+    android:layout_width="340dp"
     android:layout_height="wrap_content">
     
     <TextView
         android:id="@+id/dialog_message"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/padding_medium"
         android:text="@string/dialog_message"
         android:textAlignment="center"
-        android:textColor="@color/black"
-        android:textStyle="bold" />
+        android:gravity="center"
+        android:height="40dp"
+        android:textColor="@color/text"
+        android:textStyle="bold"
+        android:textSize="14sp"
+        android:background="@color/button_underlay"/>
 
     <View
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_below="@+id/dialog_message"
-        android:background="@color/grey" />
+        android:background="@color/divider" />
 
     <EditText
         android:id="@+id/dialog_details_field"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/divider"
-        android:layout_margin="@dimen/margin_normal"
+        android:layout_margin="8dp"
         android:background="@color/white"
+        android:textColor="@color/text"
+        android:textSize="14sp"
+        android:height="48dp"
         tools:text="Recipient name (Display if any)" />
+
+    <View
+        android:id="@+id/divider2"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/dialog_details_field"
+        android:background="@color/divider" />
 
     <Button
         android:id="@+id/btnSubmit"
@@ -36,8 +49,14 @@
         android:layout_height="wrap_content"
         android:text="@string/submit"
         android:textColor="@color/white"
-        android:background="@color/lalamove_orange"
-        android:layout_margin="@dimen/margin_normal"
-        android:layout_below="@+id/dialog_details_field"/>
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:textAllCaps="false"
+        android:background="@drawable/lala_button"
+        android:layout_below="@+id/divider2"
+        android:layout_marginRight="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginTop="24dp" />
 
 </RelativeLayout>

@@ -12,7 +12,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -117,12 +116,16 @@ public class SignatureActivity extends AppCompatActivity implements MyButton.But
 
     @Override
     public void onSave(View view) {
-        try {
-            saveSignature();
-            onUpload();
-            Log.d(TAG, saveBtn.getText() + " is successfully pressed and saved.");
-        } catch (Exception e) {
-            Log.e(TAG, saveBtn.getText() + " is failed to save.");
+        if (drawingView.isPathEmpty()) {
+            showEmptySigDialog();
+        } else {
+            try {
+                saveSignature();
+                onUpload();
+                Log.d(TAG, saveBtn.getText() + " is successfully pressed and saved.");
+            } catch (Exception e) {
+                Log.e(TAG, saveBtn.getText() + " is failed to save.");
+            }
         }
     }
 
@@ -150,14 +153,14 @@ public class SignatureActivity extends AppCompatActivity implements MyButton.But
     }
 
     @Override
-    public void onConfirm(String recipientName) {
+    public void onSubmit(String recipientName) {
         tvRecipientDetails.setText(recipientName);
         order.setRecipientName(recipientName);
     }
 
     @Override
     public void onClick(View view) {
-        if(view.getId()==R.id.ivEdit){
+        if (view.getId() == R.id.ivEdit) {
             showDetailConfirmationDialog();
         }
     }
@@ -173,6 +176,11 @@ public class SignatureActivity extends AppCompatActivity implements MyButton.But
         bundle.putString(EnterDetailsDialog.KEY_RECIPIENT_NAME, order.getRecipientName());
         enterDetails.setArguments(bundle);
         enterDetails.show(getSupportFragmentManager(), "Enter Details");
+    }
+
+    public void showEmptySigDialog() {
+        DialogFragment error = new EmptySigDialog();
+        error.show(getSupportFragmentManager(), "No Name Error");
     }
 
     /**
@@ -274,10 +282,10 @@ public class SignatureActivity extends AppCompatActivity implements MyButton.But
     }
 
     interface Service {
-    @Multipart
-    @POST("/upload")
-    Call<ResponseBody> postImage(@Part MultipartBody.Part image, @Part("name") RequestBody name);
-}
+        @Multipart
+        @POST("/upload")
+        Call<ResponseBody> postImage(@Part MultipartBody.Part image, @Part("name") RequestBody name);
+    }
 
 //    public String loadJSONFromAsset() {
 //        String json = null;

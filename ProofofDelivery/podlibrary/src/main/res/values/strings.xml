@@ -3,6 +3,9 @@
     <string name="btnConfirm">Confirm</string>
     <string name="submit">Submit</string>
     <string name="recipient_address">Recipient address</string>
-    <string name="agreement">By signing, I confirm that the nature or condition for the to be good sent are not in violation of any laws</string>
+    <string name="verification">I verify that I am the recipient for this package</string>
+    <string name="agreement">I agreed to terms and condition by signing above</string>
     <string name="dialog_message">Please confirm recipient name</string>
+    <string name="dialog_empty_name_message">Please enter recipient name</string>
+    <string name="dialog_empty_sig_message">Please ask recipient to sign first</string>
 </resources>

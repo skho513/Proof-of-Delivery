@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="300dp"
+    android:layout_height="match_parent"
+    >
+
+    <TextView
+        android:id="@+id/tvErrorMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/dialog_empty_name_message"
+        android:textSize="16sp"
+        android:textColor="@color/text"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="12dp"
+        android:textAlignment="center" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/tvErrorMessage"
+        android:background="@color/divider" />
+
+    <Button
+        android:id="@+id/btnOK"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:text="OK"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:textColor="@color/lalamove_orange"
+        android:textAlignment="center"
+        android:layout_below="@id/divider"/>
+
+</RelativeLayout>

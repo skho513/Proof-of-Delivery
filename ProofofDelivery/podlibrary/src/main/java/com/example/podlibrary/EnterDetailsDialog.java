@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -17,7 +18,7 @@ public class EnterDetailsDialog extends DialogFragment {
     Button btnSubmit;
 
     public interface OnEditConfirmListener {
-        void onConfirm(String recipientName);
+        void onSubmit(String recipientName);
     }
 
     OnEditConfirmListener listener;
@@ -31,9 +32,13 @@ public class EnterDetailsDialog extends DialogFragment {
             @Override
             public void onClick(View view) {
                 if (listener != null) {
-                    listener.onConfirm(details.getText().toString());
+                    if(details.getText().toString().isEmpty()) {
+                        showErrorDialog();
+                    } else {
+                        listener.onSubmit(details.getText().toString());
+                        dismiss();
+                    }
                 }
-                dismiss();
             }
         });
         details = (EditText) root.findViewById(R.id.dialog_details_field);
@@ -52,9 +57,14 @@ public class EnterDetailsDialog extends DialogFragment {
                     + " must implement NoticeDialogListener");
         }
     }
-    
+
     public void setupDialog(Dialog dialog, int style) {
         super.setupDialog(dialog, style);
         dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN | WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-        }
+    }
+
+    public void showErrorDialog() {
+        DialogFragment error = new EmptyNameDialog();
+        error.show(getFragmentManager(), "No Name Error");
+    }
 }
