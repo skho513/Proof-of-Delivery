@@ -8,7 +8,7 @@
         android:supportsRtl="true">
         <activity
             android:name=".SignatureActivity"
-            android:theme="@style/PodTheme" />
+            android:theme="@style/EasyVanTheme.Card" />
 
     </application>
 

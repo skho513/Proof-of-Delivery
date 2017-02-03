@@ -14,7 +14,7 @@ public class SignatureContract {
 
         void setRecipientName(String recipientName);
 
-        void confirmRecipient(Bundle bundle);
+        void confirmRecipient(String name);
 
         void handlePermissionDenial();
 

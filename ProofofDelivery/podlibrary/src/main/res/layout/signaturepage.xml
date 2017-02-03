@@ -5,15 +5,15 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@android:color/white">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
-        style="@style/PodTheme.ToolBar"
+        style="@style/EasyVanTheme.ToolBar.Dark.v4"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:background="@drawable/divider"
+        android:background="@drawable/bg_toolbar"
         android:theme="@style/ThemeOverlay.AppCompat.Light"
         android:titleTextAppearance="@style/ThemeOverlay.AppCompat.ActionBar" />
 
@@ -23,9 +23,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/toolbar"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginLeft="@dimen/card_padding_large"
+        android:layout_marginRight="@dimen/card_padding_large"
+        android:layout_marginTop="@dimen/card_padding_large"
         android:background="@drawable/ic_signature_address" />
 
     <ImageView
@@ -35,9 +35,9 @@
         android:layout_alignBottom="@+id/tvRecipientDetails"
         android:layout_alignParentRight="true"
         android:layout_alignTop="@+id/ivLocationHint"
-        android:paddingLeft="8dp"
         android:onClick="onConfirmRecipient"
-        android:paddingRight="16dp"
+        android:paddingLeft="@dimen/card_padding"
+        android:paddingRight="@dimen/card_padding_large"
         android:src="@drawable/btn_editinfo" />
 
     <TextView
@@ -47,8 +47,8 @@
         android:layout_alignTop="@+id/ivLocationHint"
         android:layout_toLeftOf="@+id/ivEdit"
         android:layout_toRightOf="@+id/ivLocationHint"
-        android:text="@string/recipient_address"
-        android:textColor="@color/text" />
+        android:text="@string/pod_recipient_address"
+        android:textColor="@color/color_gray" />
 
     <TextView
         android:id="@+id/tvRecipientDetails"
@@ -58,7 +58,7 @@
         android:layout_alignRight="@+id/tvRecipientAddress"
         android:layout_below="@id/tvRecipientAddress"
         android:paddingBottom="8dp"
-        android:textColor="@color/text"
+        android:textColor="@color/color_gray"
         tools:text="Additonal recipient info" />
 
     <View
@@ -66,7 +66,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_below="@id/tvRecipientDetails"
-        android:background="@color/divider" />
+        android:background="@drawable/divider_vertical_dark" />
 
     <com.example.podlibrary.DrawingView
         android:id="@+id/drawingView"
@@ -85,19 +85,19 @@
         android:layout_alignParentRight="true"
         android:layout_below="@+id/tvRecipientDetails"
         android:layout_marginTop="1dp"
-        android:padding="8dp"
-        android:background="@color/white"
+        android:background="@android:color/white"
         android:drawableLeft="@drawable/btn_clearsignature"
         android:onClick="onClear"
-        android:text="@string/btnClear"
-        android:textColor="@color/lalamove_orange" />
+        android:padding="@dimen/card_padding"
+        android:text="@string/btn_clear"
+        android:textColor="@color/color_primary_dark" />
 
     <RelativeLayout
         android:id="@+id/confirmation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@color/button_underlay"
+        android:background="@color/color_bg_light"
         android:paddingTop="12dp">
 
         <TextView
@@ -108,23 +108,24 @@
             android:layout_centerHorizontal="true"
             android:drawableLeft="@drawable/ic_tnc_checkbox"
             android:drawablePadding="8dp"
-            android:text="@string/agreement"
+            android:text="@string/pod_agreement"
             android:textAlignment="center"
-            android:textColor="@color/grey_text" />
+            android:textColor="@color/color_text_brief"
+            android:textSize="@dimen/text_size_small" />
 
         <Button
             android:id="@+id/btnConfirm"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tvAgreement"
-            android:layout_margin="8dp"
-            android:background="@drawable/lala_button"
+            android:layout_margin="@dimen/card_padding"
+            android:background="@drawable/btn_selector_flat_dark_v4"
             android:gravity="center"
             android:onClick="onSave"
-            android:text="@string/btnConfirm"
+            android:text="@string/btn_confirm"
             android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:textSize="16sp"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/text_size_medium"
             android:textStyle="bold" />
     </RelativeLayout>
 
@@ -135,7 +136,7 @@
         android:layout_alignBottom="@+id/drawingView"
         android:layout_alignTop="@+id/drawingView"
         app:info_icon="@drawable/ic_emptysignature"
-        app:info_text="@string/verification" />
+        app:info_text="@string/pod_verification" />
 
 
 </RelativeLayout>

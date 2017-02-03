@@ -6,20 +6,25 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.lalamove.base.dialog.InputDialog;
+import com.lalamove.base.dialog.MessageDialog;
+
 public class SignatureActivity extends AppCompatActivity implements SignatureContract.ISignatureView,
-        EnterDetailsDialog.OnEditConfirmListener, DrawingView.DrawStateListener {
+        DrawingView.DrawStateListener {
     private static final String TAG = SignatureActivity.class.getSimpleName();
+    private static final String TAG_MESSAGE_DIALOG = "TAG_MESSAGE_DIALOG";
 
     private DrawingView drawingView;
     private View ivEmptySignature;
@@ -50,7 +55,6 @@ public class SignatureActivity extends AppCompatActivity implements SignatureCon
         presenter = new SignaturePresenter(this);
         presenter.attach(this);
         presenter.with(getIntent().getExtras());
-
     }
 
     @Override
@@ -73,7 +77,8 @@ public class SignatureActivity extends AppCompatActivity implements SignatureCon
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        overridePendingTransition(R.anim.activity_slide_in_left, R.anim.activity_slide_out_right);
+        overridePendingTransition(com.lalamove.base.R.anim.activity_slide_in_left,
+                com.lalamove.base.R.anim.activity_slide_out_right);
     }
 
     public void onSave(View view) {
@@ -91,12 +96,6 @@ public class SignatureActivity extends AppCompatActivity implements SignatureCon
     }
 
     @Override
-    public void onSubmit(String recipientName) {
-        tvRecipientDetails.setText(recipientName);
-        presenter.setRecipient(recipientName);
-    }
-
-    @Override
     public void onDrawStarted() {
         ivEmptySignature.setVisibility(View.GONE);
     }
@@ -106,7 +105,9 @@ public class SignatureActivity extends AppCompatActivity implements SignatureCon
     }
 
     public void showEmptySigDialog() {
-        new EmptySigDialog().show(getSupportFragmentManager(), "No Name Error");
+        new MessageDialog.Builder(this).setMessage(R.string.pod_empty_sig_error)
+                .setNegativeButton("OK")
+                .show(getSupportFragmentManager(), TAG_MESSAGE_DIALOG);
     }
 
     @Override
@@ -121,10 +122,37 @@ public class SignatureActivity extends AppCompatActivity implements SignatureCon
     }
 
     @Override
-    public void confirmRecipient(Bundle bundle) {
-        DialogFragment enterDetails = new EnterDetailsDialog();
-        enterDetails.setArguments(bundle);
-        enterDetails.show(getSupportFragmentManager(), "Enter Details");
+    public void confirmRecipient(final String name) {
+        new InputDialog.Builder(this)
+                .setInputInitListener(new InputDialog.InputInitListener() {
+                    @Override
+                    public void onInit(EditText editText) {
+                        editText.setText(name);
+                        editText.setSingleLine();
+                    }
+                })
+                .setInputValidationListener(new InputDialog.InputValidationListener() {
+                    @Override
+                    public boolean validate(EditText editText, String s) {
+                        if (TextUtils.isEmpty(s)) {
+                            new MessageDialog.Builder(SignatureActivity.this).setMessage(R.string.pod_empty_name_error)
+                                    .setNegativeButton("OK")
+                                    .show(getSupportFragmentManager(), TAG_MESSAGE_DIALOG);
+                            return false;
+                        }
+                        return true;
+                    }
+                })
+                .setInputConfirmationListener(new InputDialog.InputConfirmationListener() {
+                    @Override
+                    public void onConfirm(InputDialog inputDialog, String s) {
+                        tvRecipientDetails.setText(s);
+                        presenter.setRecipient(s);
+                    }
+                })
+                .setTitle(R.string.pod_confirm_name)
+                .setPositiveButton(R.string.btn_submit)
+                .show(getSupportFragmentManager(), "Enter Details");
     }
 
     @Override
@@ -148,15 +176,15 @@ public class SignatureActivity extends AppCompatActivity implements SignatureCon
     }
 
     public void showStoragePermissionRationale() {
-        new AlertDialog.Builder(this, R.style.PodTheme_Dialog).setTitle(R.string.alert_title)
-                .setMessage(R.string.alert_info)
-                .setPositiveButton(R.string.alert_positive, new DialogInterface.OnClickListener() {
+        new AlertDialog.Builder(this).setTitle(R.string.permission_required)
+                .setMessage(R.string.pod_alert_info)
+                .setPositiveButton(R.string.permission_btn_grant, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         presenter.requestStoragePermission();
                     }
                 })
-                .setNegativeButton(R.string.alert_negative, new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.permission_btn_deny, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();

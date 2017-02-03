@@ -1,11 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="white">#FFFFFF</color>
-    <color name="black">#000000</color>
-    <color name="divider">#F2F2F2</color>
-    <color name="text">#58595B</color>
-    <color name="button_underlay">#FFFAF7</color>
-    <color name="grey_text">#B4B4B4</color>
-    <color name="lalamove_orange">#F16622</color>
-    <color name="ivEmptySig">#D9D9D9</color>
+
 </resources>

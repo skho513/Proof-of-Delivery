@@ -10,6 +10,9 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
+import com.lalamove.base.presenter.AbstractPresenter;
+import com.lalamove.core.utils.DataUtils;
+
 import java.io.File;
 
 import okhttp3.MediaType;
@@ -23,17 +26,18 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
+import static com.example.podlibrary.SignatureContract.*;
+
 /**
  * Created by bryanyeung on 2/2/2017.
  */
-public class SignaturePresenter implements SignatureContract.ISignaturePresenter {
+public class SignaturePresenter extends AbstractPresenter<SignatureContract.ISignatureView> implements ISignaturePresenter {
     private static final String TAG = "SignaturePresenter";
     private static final int REQUEST_CODE_READ_EXTERNAL_STORAGE = 1;
     public static final String KEY_ORDER = "KEY_ORDER";
     private final File PIC_DIR = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
     private final File file = new File(PIC_DIR, "podSignature.png");
 
-    private SignatureContract.ISignatureView view;
     private Order order;
     private Context context;
 
@@ -43,18 +47,8 @@ public class SignaturePresenter implements SignatureContract.ISignaturePresenter
 
     @Override
     public void with(Bundle bundle) {
-        order = (Order) bundle.getSerializable(KEY_ORDER);
+        order = DataUtils.get(bundle.getSerializable(KEY_ORDER), Order.class);
         view.setRecipientName(order.getRecipientName());
-    }
-
-    @Override
-    public void attach(SignatureContract.ISignatureView view) {
-        this.view = view;
-    }
-
-    @Override
-    public void detach() {
-        this.view = null;
     }
 
     @Override
@@ -126,9 +120,6 @@ public class SignaturePresenter implements SignatureContract.ISignaturePresenter
 
     @Override
     public void requestConfirmRecipient() {
-        final Bundle bundle = new Bundle();
-        bundle.putString(EnterDetailsDialog.KEY_RECIPIENT_NAME, order.getRecipientName());
-
-        view.confirmRecipient(bundle);
+        view.confirmRecipient(order.getRecipientName());
     }
 }

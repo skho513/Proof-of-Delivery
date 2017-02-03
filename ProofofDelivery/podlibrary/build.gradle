@@ -2,8 +2,15 @@ apply plugin: 'com.android.library'
 apply plugin: 'com.jfrog.artifactory'
 apply plugin: 'maven-publish'
 
+final Properties props = new Properties()
+props.load(new FileInputStream('build.properties'))
+
+def artifactoryUrl = props['artifactory.url']
+def artifactoryUsername = props['artifactory.credentials.username']
+def artifactoryPassword = props['artifactory.credentials.password']
+
 def packageName = 'com.example.podlibrary'
-def libraryVersion = '1.1.7'
+def libraryVersion = '0.2.17'
 
 android {
     compileSdkVersion 25
@@ -28,11 +35,10 @@ android {
 
 dependencies {
     compile 'com.android.support:appcompat-v7:25.1.1'
-    compile('com.lalamove.podlibrary:drawingview:1.0.5')
     compile('com.android.support:design:23.1.0')
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.okhttp3:logging-interceptor:3.4.1'
-    compile 'com.lalamove.core:core:0.2.13'
+    compile "com.lalamove.base:base:$libraryVersion"
 }
 
 publishing {
@@ -58,16 +64,16 @@ publishing {
     }
 }
 
-
 artifactory {
-    contextUrl = "https://artifactory.easygroup.co/artifactory"
-    //The base Artifactory URL if not overridden by the publisher/resolver
+    contextUrl = artifactoryUrl
+
     publish {
         repository {
             repoKey = 'libs-release-local'
-            username = "daniel.kho"
-            password = "Xh+6vn?uJ_jEYUsz"
+            username = artifactoryUsername
+            password = artifactoryPassword
             maven = true
+
         }
         defaults {
             publications('aar')
@@ -81,8 +87,8 @@ artifactory {
     resolve {
         repository {
             repoKey = 'libs-release'
-            username = "daniel.kho"
-            password = "Xh+6vn?uJ_jEYUsz"
+            username = artifactoryUsername
+            password = artifactoryPassword
             maven = true
         }
     }
