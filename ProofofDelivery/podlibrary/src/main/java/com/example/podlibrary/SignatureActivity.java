@@ -5,15 +5,12 @@ import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,30 +18,40 @@ import android.widget.Toast;
 import com.lalamove.base.dialog.InputDialog;
 import com.lalamove.base.dialog.MessageDialog;
 
+import javax.inject.Inject;
+
+import permissions.dispatcher.NeedsPermission;
+import permissions.dispatcher.OnNeverAskAgain;
+import permissions.dispatcher.OnPermissionDenied;
+import permissions.dispatcher.OnShowRationale;
+import permissions.dispatcher.PermissionRequest;
+import permissions.dispatcher.RuntimePermissions;
+
+
+@RuntimePermissions
 public class SignatureActivity extends AppCompatActivity implements SignatureContract.ISignatureView,
         DrawingView.DrawStateListener {
-    private static final String TAG = SignatureActivity.class.getSimpleName();
+    private static final String TAG_RECIPIENT_DIALOG = "TAG_RECIPIENT_DIALOG";
     private static final String TAG_MESSAGE_DIALOG = "TAG_MESSAGE_DIALOG";
 
     private DrawingView drawingView;
     private View ivEmptySignature;
-    private Button clearBtn;
-    private Button saveBtn;
     private TextView tvRecipientDetails;
-    private SignatureContract.ISignaturePresenter presenter;
+
+    @Inject
+    protected SignatureContract.ISignaturePresenter presenter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(com.example.podlibrary.R.layout.signaturepage);
+        PodInjector.getComponent().inject(this);
 
         drawingView = (DrawingView) findViewById(R.id.drawingView);
         drawingView.setDrawingCacheEnabled(true);
         ivEmptySignature = findViewById(R.id.ivEmptySignature);
         drawingView.setDrawStateListener(this);
 
-        saveBtn = (Button) findViewById(R.id.btnConfirm);
-        clearBtn = (Button) findViewById(R.id.btnClear);
         tvRecipientDetails = (TextView) findViewById(R.id.tvRecipientDetails);
 
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
@@ -52,7 +59,6 @@ public class SignatureActivity extends AppCompatActivity implements SignatureCon
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        presenter = new SignaturePresenter(this);
         presenter.attach(this);
         presenter.with(getIntent().getExtras());
     }
@@ -77,30 +83,14 @@ public class SignatureActivity extends AppCompatActivity implements SignatureCon
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        overridePendingTransition(com.lalamove.base.R.anim.activity_slide_in_left,
-                com.lalamove.base.R.anim.activity_slide_out_right);
+        overridePendingTransition(R.anim.activity_slide_in_left, R.anim.activity_slide_out_right);
     }
 
-    public void onSave(View view) {
-        if (drawingView.isEmpty()) {
-            showEmptySigDialog();
-        } else {
-            presenter.submitPOD();
-            Log.d(TAG, saveBtn.getText() + " is successfully pressed and saved.");
-        }
-    }
-
-    public void onClear(View view) {
+    public void clearDrawing(View view) {
         drawingView.clearView();
-        Log.d(TAG, clearBtn.getText() + " is successfully pressed and cleared.");
     }
 
-    @Override
-    public void onDrawStarted() {
-        ivEmptySignature.setVisibility(View.GONE);
-    }
-
-    public void onConfirmRecipient(View view) {
+    public void confirmRecipient(View view) {
         presenter.requestConfirmRecipient();
     }
 
@@ -110,10 +100,28 @@ public class SignatureActivity extends AppCompatActivity implements SignatureCon
                 .show(getSupportFragmentManager(), TAG_MESSAGE_DIALOG);
     }
 
+    public void saveRecipient(View view) {
+        if (drawingView.isEmpty()) {
+            showEmptySigDialog();
+        } else {
+            SignatureActivityPermissionsDispatcher.submitPODWithCheck(this);
+        }
+    }
+
+    @NeedsPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+    public void submitPOD() {
+        presenter.submitPOD();
+    }
+
+    @Override
+    public void onDrawStarted() {
+        ivEmptySignature.setVisibility(View.GONE);
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        presenter.handlePermissionResults(requestCode, permissions, grantResults);
+        SignatureActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
     }
 
     @Override
@@ -135,9 +143,7 @@ public class SignatureActivity extends AppCompatActivity implements SignatureCon
                     @Override
                     public boolean validate(EditText editText, String s) {
                         if (TextUtils.isEmpty(s)) {
-                            new MessageDialog.Builder(SignatureActivity.this).setMessage(R.string.pod_empty_name_error)
-                                    .setNegativeButton("OK")
-                                    .show(getSupportFragmentManager(), TAG_MESSAGE_DIALOG);
+                            showMissingRecipientDialog();
                             return false;
                         }
                         return true;
@@ -152,13 +158,14 @@ public class SignatureActivity extends AppCompatActivity implements SignatureCon
                 })
                 .setTitle(R.string.pod_confirm_name)
                 .setPositiveButton(R.string.btn_submit)
-                .show(getSupportFragmentManager(), "Enter Details");
+                .show(getSupportFragmentManager(), TAG_RECIPIENT_DIALOG);
     }
 
-    @Override
-    public void handlePermissionDenial() {
-        Toast.makeText(this, "READ_EXTERNAL_STORAGE Denied", Toast.LENGTH_SHORT)
-                .show();
+    private void showMissingRecipientDialog() {
+        new MessageDialog.Builder(SignatureActivity.this)
+                .setMessage(R.string.pod_empty_name_error)
+                .setNegativeButton("OK")
+                .show(getSupportFragmentManager(), TAG_MESSAGE_DIALOG);
     }
 
     @Override
@@ -166,29 +173,33 @@ public class SignatureActivity extends AppCompatActivity implements SignatureCon
         return DataUtil.getBitmap(drawingView);
     }
 
-    @Override
-    public void requestStoragePermission(String[] permissions, int requestCode) {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
-            showStoragePermissionRationale();
-        } else {
-            ActivityCompat.requestPermissions(this, permissions, requestCode);
-        }
-    }
-
-    public void showStoragePermissionRationale() {
+    @OnShowRationale(Manifest.permission.READ_EXTERNAL_STORAGE)
+    public void showStoragePermissionRationale(final PermissionRequest request) {
         new AlertDialog.Builder(this).setTitle(R.string.permission_required)
                 .setMessage(R.string.pod_alert_info)
                 .setPositiveButton(R.string.permission_btn_grant, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        presenter.requestStoragePermission();
+                        request.proceed();
                     }
                 })
                 .setNegativeButton(R.string.permission_btn_deny, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
+                        request.cancel();
                     }
                 }).show();
+    }
+
+    @OnPermissionDenied(Manifest.permission.READ_EXTERNAL_STORAGE)
+    public void handlePermissionDenied() {
+        Toast.makeText(this, "READ_EXTERNAL_STORAGE Denied", Toast.LENGTH_SHORT)
+                .show();
+    }
+
+    @OnNeverAskAgain(Manifest.permission.READ_EXTERNAL_STORAGE)
+    public void handlePermissionPermanentlyDenied() {
+        Toast.makeText(this, "READ_EXTERNAL_STORAGE Denied", Toast.LENGTH_SHORT)
+                .show();
     }
 }

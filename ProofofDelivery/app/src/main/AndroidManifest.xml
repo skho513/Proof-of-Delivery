@@ -12,7 +12,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true">
         <activity
-            android:name=".getSignaturePage"
+            android:name=".DemoActivity"
             android:label="@string/app_name"
             android:theme="@style/EasyVanTheme.Card">
             <intent-filter>
@@ -22,7 +22,8 @@
         </activity>
         <activity
             android:name="com.example.podlibrary.SignatureActivity"
-            android:theme="@style/EasyVanTheme.Card"/>
+            android:label="Demo Page"
+            android:theme="@style/EasyVanTheme.Card" />
     </application>
 
 </manifest>

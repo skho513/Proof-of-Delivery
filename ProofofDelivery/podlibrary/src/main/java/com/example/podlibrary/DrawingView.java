@@ -37,16 +37,16 @@ public class DrawingView extends View {
 
     public DrawingView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init(context);
+        init();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public DrawingView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        init(context);
+        init();
     }
 
-    private void init(Context context) {
+    private void init() {
         path = new Path();
         paintPen = new Paint();
         paintPen.setAntiAlias(true);
@@ -57,7 +57,7 @@ public class DrawingView extends View {
         paintPen.setStrokeWidth(12);
     }
 
-    public void setDrawStateListener (DrawStateListener listener) {
+    public void setDrawStateListener(DrawStateListener listener) {
         this.listener = listener;
     }
 
@@ -73,9 +73,7 @@ public class DrawingView extends View {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 path.moveTo(event.getX(), event.getY());
-                if (!path.isEmpty() && listener != null) {
-                    listener.onDrawStarted();
-                }
+               notifyDrawStart();
                 break;
 
             case MotionEvent.ACTION_MOVE:
@@ -89,12 +87,18 @@ public class DrawingView extends View {
         return true;
     }
 
+    private void notifyDrawStart() {
+        if (!path.isEmpty() && listener != null) {
+            listener.onDrawStarted();
+        }
+    }
+
     public void clearView() {
         path.reset();
         invalidate();
     }
 
-    public boolean isEmpty(){
+    public boolean isEmpty() {
         return path.isEmpty();
     }
 }

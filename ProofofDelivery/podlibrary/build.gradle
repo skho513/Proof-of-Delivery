@@ -1,6 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.jfrog.artifactory'
 apply plugin: 'maven-publish'
+apply plugin: 'com.neenbedankt.android-apt'
 
 final Properties props = new Properties()
 props.load(new FileInputStream('build.properties'))
@@ -10,7 +11,7 @@ def artifactoryUsername = props['artifactory.credentials.username']
 def artifactoryPassword = props['artifactory.credentials.password']
 
 def packageName = 'com.example.podlibrary'
-def libraryVersion = '0.2.17'
+def libraryVersion = '0.3.11'
 
 android {
     compileSdkVersion 25
@@ -38,6 +39,9 @@ dependencies {
     compile('com.android.support:design:23.1.0')
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.okhttp3:logging-interceptor:3.4.1'
+    compile 'com.google.dagger:dagger:2.8'
+    apt 'com.google.dagger:dagger-compiler:2.8'
+    apt 'com.github.hotchemi:permissionsdispatcher-processor:2.3.1'
     compile "com.lalamove.base:base:$libraryVersion"
 }
 

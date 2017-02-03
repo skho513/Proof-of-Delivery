@@ -35,7 +35,7 @@
         android:layout_alignBottom="@+id/tvRecipientDetails"
         android:layout_alignParentRight="true"
         android:layout_alignTop="@+id/ivLocationHint"
-        android:onClick="onConfirmRecipient"
+        android:onClick="confirmRecipient"
         android:paddingLeft="@dimen/card_padding"
         android:paddingRight="@dimen/card_padding_large"
         android:src="@drawable/btn_editinfo" />
@@ -87,7 +87,7 @@
         android:layout_marginTop="1dp"
         android:background="@android:color/white"
         android:drawableLeft="@drawable/btn_clearsignature"
-        android:onClick="onClear"
+        android:onClick="clearDrawing"
         android:padding="@dimen/card_padding"
         android:text="@string/btn_clear"
         android:textColor="@color/color_primary_dark" />
@@ -121,7 +121,7 @@
             android:layout_margin="@dimen/card_padding"
             android:background="@drawable/btn_selector_flat_dark_v4"
             android:gravity="center"
-            android:onClick="onSave"
+            android:onClick="saveRecipient"
             android:text="@string/btn_confirm"
             android:textAllCaps="false"
             android:textColor="@android:color/white"
