@@ -8,4 +8,8 @@
     <string name="dialog_message">Please confirm recipient name</string>
     <string name="dialog_empty_name_message">Please enter recipient name</string>
     <string name="dialog_empty_sig_message">Please ask recipient to sign first</string>
+    <string name="alert_title">Permission Required</string>
+    <string name="alert_info">You need to grant access to complete the reception process.</string>
+    <string name="alert_positive">GRANT NOW</string>
+    <string name="alert_negative">DENY</string>
 </resources>

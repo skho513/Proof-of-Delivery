@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="PodTheme.ToolBar" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:background">@drawable/divider</item>
+        <item name="theme">@style/Theme.AppCompat.NoActionBar</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+        <item name="android:titleTextAppearance">@style/ThemeOverlay.AppCompat.ActionBar</item>
+    </style>
+
+</resources>

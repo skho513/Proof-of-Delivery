@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
@@ -8,11 +9,13 @@
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
+        style="@style/PodTheme.ToolBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
+        android:background="@drawable/divider"
         android:theme="@style/ThemeOverlay.AppCompat.Light"
-        android:background="@drawable/divider"/>
+        android:titleTextAppearance="@style/ThemeOverlay.AppCompat.ActionBar" />
 
     <ImageView
         android:id="@+id/ivLocationHint"
@@ -32,8 +35,9 @@
         android:layout_alignBottom="@+id/tvRecipientDetails"
         android:layout_alignParentRight="true"
         android:layout_alignTop="@+id/ivLocationHint"
-        android:paddingRight="16dp"
         android:paddingLeft="8dp"
+        android:onClick="onConfirmRecipient"
+        android:paddingRight="16dp"
         android:src="@drawable/btn_editinfo" />
 
     <TextView
@@ -57,20 +61,6 @@
         android:textColor="@color/text"
         tools:text="Additonal recipient info" />
 
-    <Button
-        android:id="@+id/clearBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/tvRecipientDetails"
-        android:background="@null"
-        android:drawableLeft="@drawable/btn_clearsignature"
-        android:onClick="onClear"
-        android:text="@string/btnClear"
-        android:textColor="@color/lalamove_orange"
-        android:layout_marginTop="1dp"/>
-
     <View
         android:id="@+id/divider"
         android:layout_width="match_parent"
@@ -82,69 +72,70 @@
         android:id="@+id/drawingView"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
+        android:layout_above="@+id/confirmation"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/divider"
-        android:layout_above="@+id/confirmation"/>
+        android:layout_below="@+id/divider" />
+
+    <Button
+        android:id="@+id/btnClear"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/tvRecipientDetails"
+        android:layout_marginTop="1dp"
+        android:padding="8dp"
+        android:background="@color/white"
+        android:drawableLeft="@drawable/btn_clearsignature"
+        android:onClick="onClear"
+        android:text="@string/btnClear"
+        android:textColor="@color/lalamove_orange" />
 
     <RelativeLayout
         android:id="@+id/confirmation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="12dp"
         android:layout_alignParentBottom="true"
-        android:background="@color/button_underlay">
+        android:background="@color/button_underlay"
+        android:paddingTop="12dp">
 
         <TextView
             android:id="@+id/tvAgreement"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:text="@string/agreement"
             android:layout_alignParentTop="true"
-            android:textColor="@color/grey_text"
-            android:textAlignment="center"
+            android:layout_centerHorizontal="true"
             android:drawableLeft="@drawable/ic_tnc_checkbox"
-            android:drawablePadding="8dp"/>
+            android:drawablePadding="8dp"
+            android:text="@string/agreement"
+            android:textAlignment="center"
+            android:textColor="@color/grey_text" />
 
         <Button
-            android:layout_below="@+id/tvAgreement"
             android:id="@+id/btnConfirm"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/lala_button"
+            android:layout_below="@+id/tvAgreement"
             android:layout_margin="8dp"
+            android:background="@drawable/lala_button"
+            android:gravity="center"
             android:onClick="onSave"
             android:text="@string/btnConfirm"
+            android:textAllCaps="false"
             android:textColor="@color/white"
             android:textSize="16sp"
-            android:textStyle="bold"
-            android:textAllCaps="false" />
+            android:textStyle="bold" />
     </RelativeLayout>
 
-    <LinearLayout
+    <com.lalamove.core.view.InfoView
         android:id="@+id/ivEmptySignature"
-        android:orientation="vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true">
+        android:layout_alignBottom="@+id/drawingView"
+        android:layout_alignTop="@+id/drawingView"
+        app:info_icon="@drawable/ic_emptysignature"
+        app:info_text="@string/verification" />
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:background="@drawable/ic_emptysignature" />
-
-        <TextView
-            android:layout_width="210dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_gravity="center_horizontal"
-            android:text="@string/verification"
-            android:textAlignment="center"
-            android:textSize="14sp"
-            android:textColor="@color/ivEmptySig"/>
-    </LinearLayout>
 
 </RelativeLayout>

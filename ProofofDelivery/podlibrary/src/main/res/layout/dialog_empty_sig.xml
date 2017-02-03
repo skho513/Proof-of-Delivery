@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:layout_width="300dp"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     >
 
     <TextView
@@ -26,13 +27,13 @@
     <Button
         android:id="@+id/btnOK"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:background="@color/white"
         android:text="OK"
         android:textStyle="bold"
         android:textSize="16sp"
         android:textColor="@color/lalamove_orange"
-        android:textAlignment="center"
+        android:gravity="center"
         android:layout_below="@id/divider"/>
 
 </RelativeLayout>

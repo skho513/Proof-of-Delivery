@@ -94,7 +94,7 @@ public class DrawingView extends View {
         invalidate();
     }
 
-    public boolean isPathEmpty(){
+    public boolean isEmpty(){
         return path.isEmpty();
     }
 }

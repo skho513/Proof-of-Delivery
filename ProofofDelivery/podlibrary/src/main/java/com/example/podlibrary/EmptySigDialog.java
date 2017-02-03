@@ -22,6 +22,6 @@ public class EmptySigDialog extends DialogFragment {
                 dismiss();
             }
         });
-        return new AlertDialog.Builder(getActivity()).setView(root).create();
+        return new AlertDialog.Builder(getActivity(), R.style.PodTheme_Dialog).setView(root).create();
     }
 }
