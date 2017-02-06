@@ -12,20 +12,26 @@ import android.view.MotionEvent;
 import android.view.View;
 
 /**
- * Created by Nance on 18/1/2017.
+ * Custom view for drawing
+ *
+ * @author Nance
  */
-
 public class DrawingView extends View {
-    public int width;
-    public int height;
-    private Path path;
-    private Paint paintPen;
-
+    /**
+     * Listener to be implemented by classes that needs to know states of this view
+     */
     public interface DrawStateListener {
-        void onDrawStarted();
+        /**
+         * Invoked when drawing has started
+         *
+         * @param view where the drawing started
+         */
+        void onDrawStarted(DrawingView view);
     }
 
-    DrawStateListener listener;
+    private Path path;
+    private Paint paintPen;
+    private DrawStateListener listener;
 
     public DrawingView(Context context) {
         this(context, null);
@@ -57,6 +63,11 @@ public class DrawingView extends View {
         paintPen.setStrokeWidth(12);
     }
 
+    /**
+     * Sets a {@link DrawStateListener}
+     *
+     * @param listener to attach
+     */
     public void setDrawStateListener(DrawStateListener listener) {
         this.listener = listener;
     }
@@ -73,15 +84,12 @@ public class DrawingView extends View {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 path.moveTo(event.getX(), event.getY());
-               notifyDrawStart();
+                notifyDrawStart();
                 break;
 
             case MotionEvent.ACTION_MOVE:
                 path.lineTo(event.getX(), event.getY());
                 invalidate();
-                break;
-
-            case MotionEvent.ACTION_UP:
                 break;
         }
         return true;
@@ -89,7 +97,7 @@ public class DrawingView extends View {
 
     private void notifyDrawStart() {
         if (!path.isEmpty() && listener != null) {
-            listener.onDrawStarted();
+            listener.onDrawStarted(this);
         }
     }
 

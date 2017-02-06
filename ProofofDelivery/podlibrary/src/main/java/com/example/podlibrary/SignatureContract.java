@@ -3,10 +3,13 @@ package com.example.podlibrary;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 
-/**
- * Created by bryanyeung on 2/2/2017.
- */
+import com.lalamove.base.presenter.Initializable;
 
+/**
+ * Contract for signature view and presenter
+ *
+ * @author bryanyeung
+ */
 public class SignatureContract {
     interface ISignatureView {
         void setRecipientName(String recipientName);
@@ -16,13 +19,7 @@ public class SignatureContract {
         Bitmap getDrawing();
     }
 
-    interface ISignaturePresenter {
-        void with(Bundle bundle);
-
-        void attach(ISignatureView view);
-
-        void detach();
-
+    interface ISignaturePresenter extends Initializable<Bundle> {
         void submitPOD();
 
         void setRecipient(String name);

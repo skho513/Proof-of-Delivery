@@ -11,7 +11,7 @@ def artifactoryUsername = props['artifactory.credentials.username']
 def artifactoryPassword = props['artifactory.credentials.password']
 
 def packageName = 'com.example.podlibrary'
-def libraryVersion = '0.3.11'
+def libraryVersion = '0.3.12'
 
 android {
     compileSdkVersion 25

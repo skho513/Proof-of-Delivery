@@ -95,7 +95,7 @@ public class SignatureActivity extends AppCompatActivity implements SignatureCon
     }
 
     public void showEmptySigDialog() {
-        new MessageDialog.Builder(this).setMessage(R.string.pod_empty_sig_error)
+        new MessageDialog.Builder(this).setMessage(R.string.pod_missing_signature)
                 .setNegativeButton("OK")
                 .show(getSupportFragmentManager(), TAG_MESSAGE_DIALOG);
     }
@@ -114,7 +114,7 @@ public class SignatureActivity extends AppCompatActivity implements SignatureCon
     }
 
     @Override
-    public void onDrawStarted() {
+    public void onDrawStarted(DrawingView view) {
         ivEmptySignature.setVisibility(View.GONE);
     }
 
@@ -163,7 +163,7 @@ public class SignatureActivity extends AppCompatActivity implements SignatureCon
 
     private void showMissingRecipientDialog() {
         new MessageDialog.Builder(SignatureActivity.this)
-                .setMessage(R.string.pod_empty_name_error)
+                .setMessage(R.string.pod_missing_name)
                 .setNegativeButton("OK")
                 .show(getSupportFragmentManager(), TAG_MESSAGE_DIALOG);
     }
@@ -176,7 +176,7 @@ public class SignatureActivity extends AppCompatActivity implements SignatureCon
     @OnShowRationale(Manifest.permission.READ_EXTERNAL_STORAGE)
     public void showStoragePermissionRationale(final PermissionRequest request) {
         new AlertDialog.Builder(this).setTitle(R.string.permission_required)
-                .setMessage(R.string.pod_alert_info)
+                .setMessage(R.string.pod_storage_permission_rationale)
                 .setPositiveButton(R.string.permission_btn_grant, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

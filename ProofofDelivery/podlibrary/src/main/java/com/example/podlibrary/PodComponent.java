@@ -12,7 +12,7 @@ import javax.inject.Singleton;
 import dagger.Component;
 
 /**
- * Component for binding pod dependencies
+ * Component for binding pod dependencies.
  *
  * @author milan
  */

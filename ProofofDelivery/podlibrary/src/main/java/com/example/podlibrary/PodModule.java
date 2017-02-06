@@ -1,7 +1,5 @@
 package com.example.podlibrary;
 
-import android.content.Context;
-
 import com.google.gson.Gson;
 import com.lalamove.base.auth.IAuthProvider;
 import com.lalamove.base.provider.module.DataModule;
@@ -37,8 +35,8 @@ public class PodModule {
 
     @Singleton
     @Provides
-    public SignatureContract.ISignaturePresenter provideSignaturePresenter(Context context, PodApi podApi) {
-        return new SignaturePresenter(context, podApi);
+    public SignatureContract.ISignaturePresenter provideSignaturePresenter(PodApi podApi) {
+        return new SignaturePresenter(podApi);
     }
 
     @Singleton

@@ -8,7 +8,9 @@ import retrofit2.http.POST;
 import retrofit2.http.Part;
 
 /**
- * Created by bryanyeung on 2/2/2017.
+ * API for making POD Api calls
+ *
+ * @author bryanyeung
  */
 interface PodApi {
     @Multipart

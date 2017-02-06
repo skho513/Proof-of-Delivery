@@ -14,6 +14,10 @@ import com.example.podlibrary.SignatureActivity;
 import com.example.podlibrary.SignaturePresenter;
 import com.google.gson.GsonBuilder;
 import com.lalamove.base.config.Configuration;
+import com.lalamove.base.config.ConfigurationManager;
+import com.lalamove.base.config.Environment;
+import com.lalamove.base.config.Flavor;
+import com.lalamove.base.config.IConfigurationProvider;
 import com.lalamove.base.provider.module.AppModule;
 import com.lalamove.base.provider.module.ConfigModule;
 
@@ -36,7 +40,7 @@ public class DemoActivity extends AppCompatActivity {
     private void initPodComponent() {
         PodInjector.setComponent(DaggerPodComponent.builder().appModule(new AppModule(this))
                 .podModule(getPODModule())
-                .configModule(ConfigModule.getDebugConfiguration(Configuration.Flavor.USER))
+                .configModule(getConfigModule())
                 .build());
     }
 
@@ -47,5 +51,24 @@ public class DemoActivity extends AppCompatActivity {
      */
     private PodModule getPODModule() {
         return new PodModule(new MockAuthProvider(), new GsonBuilder().create());
+    }
+
+    public ConfigModule getConfigModule() {
+        return new ConfigModule(new IConfigurationProvider() {
+            @Override
+            public String getEnvironment() {
+                return null;
+            }
+
+            @Override
+            public void setEnvironment(String s) {
+
+            }
+
+            @Override
+            public Configuration getConfiguration() {
+                return ConfigurationManager.getConfiguration("hk.easyvan.app.client", 760, Flavor.DRIVER, Environment.DEVELOP);
+            }
+        });
     }
 }

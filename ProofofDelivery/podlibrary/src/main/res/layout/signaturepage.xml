@@ -26,7 +26,7 @@
         android:layout_marginLeft="@dimen/card_padding_large"
         android:layout_marginRight="@dimen/card_padding_large"
         android:layout_marginTop="@dimen/card_padding_large"
-        android:background="@drawable/ic_signature_address" />
+        android:background="@drawable/ic_location_icon" />
 
     <ImageView
         android:id="@+id/ivEdit"

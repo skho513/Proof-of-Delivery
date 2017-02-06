@@ -4,7 +4,7 @@
     <string name="pod_verification">I verify that I am the recipient for this package</string>
     <string name="pod_agreement">I agreed to terms and condition by signing above</string>
     <string name="pod_confirm_name">Please confirm recipient name</string>
-    <string name="pod_empty_name_error">Please enter recipient name</string>
-    <string name="pod_empty_sig_error">Please ask recipient to sign first</string>
-    <string name="pod_alert_info">You need to grant access to complete the reception process.</string>
+    <string name="pod_missing_name">Please enter recipient name</string>
+    <string name="pod_missing_signature">Please ask recipient to sign first</string>
+    <string name="pod_storage_permission_rationale">You need to grant access to complete the reception process.</string>
 </resources>
